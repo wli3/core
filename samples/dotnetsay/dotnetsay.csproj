@@ -6,4 +6,8 @@
     <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.85" />
+  </ItemGroup>
 </Project>
