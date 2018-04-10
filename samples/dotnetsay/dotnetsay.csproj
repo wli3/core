@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <PackAsTool>true</PackAsTool>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddInShims</TargetsForTfmSpecificContentInPackage>
+    <PackageId>dotnetsay-byos-test-04102018</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,16 @@
 
   <Import Project="buildproject/AppHostTemplate.target" />
   <Target Name="EnsureAppHostPackageRestored2" AfterTargets="Build" DependsOnTargets="Restore;ExtractAppHostToOutput">
-
   </Target>
+
+  <Target Name="AddInShims" DependsOnTargets="Publish;EnsureAppHostPackageRestored2">
+
+    <!--All published file in different tools/tfm-->
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(AppHostTemplatePath)/**/*.*">
+        <PackagePath>tools/$(targetframework)/any/shims/$(RID)</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+
 </Project>

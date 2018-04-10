@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <Target Name="ExtractAppHostToOutput"
-          Condition="!Exists('$(AppHostTemplatePath)/$(AppHostExecutableName)')"
+          Condition="!Exists('$(AppHostTemplatePath)/$(RID)/$(AppHostExecutableName)')"
           DependsOnTargets="EnsureAppHostPackageRestored">
 
     <Message Text="Restore $(TemplateFillInPackageName) from $(AppHostIntermediateDirectory) to $(AppHostTemplatePath)."
