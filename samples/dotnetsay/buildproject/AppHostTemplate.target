@@ -1,0 +1,50 @@
+<Project DefaultTargets="ExtractAppHostToOutput">
+
+    <PropertyGroup>
+        <TemplateFillInPackageName>microsoft.netcore.dotnetapphost</TemplateFillInPackageName>
+        <TemplateFillInPackageVersion>2.1.0-preview3-26406-06</TemplateFillInPackageVersion>
+        <AppTargetFramework>netcoreapp2.1</AppTargetFramework>
+        <Rid>win-x64</Rid>
+    </PropertyGroup>
+
+  <PropertyGroup>
+    <NativeExecutableExtension Condition=" $(Rid.StartsWith('win'))">.exe</NativeExecutableExtension>
+    <AppHostExecutableName>AppHost$(NativeExecutableExtension)</AppHostExecutableName>
+  </PropertyGroup>
+
+  <Target Name="ExtractAppHostToOutput"
+          Condition="!Exists('$(AppHostTemplatePath)/$(AppHostExecutableName)')"
+          DependsOnTargets="EnsureAppHostPackageRestored">
+
+    <Message Text="Restore $(TemplateFillInPackageName) from $(AppHostTemplatePath) to $(AppHostTemplateRestoreAdditionalParameters)."
+             Importance="High" />
+
+    <ItemGroup>
+      <AllFileOfRestoredAppHostPackage Include="$(AppHostIntermediateDirectory)\**\*.*" />
+      <NativeRestoredAppHostNETCore
+          Include="@(AllFileOfRestoredAppHostPackage)"
+          Condition="'%(FileName)%(Extension)' == '$(AppHostExecutableName)'"/>
+    </ItemGroup>
+
+    <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
+           Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in $(AllFileOfRestoredAppHostPackage)" />
+
+    <Copy
+        SourceFiles="@(NativeRestoredAppHostNETCore)"
+        DestinationFolder="$(AppHostTemplatePath)" />
+
+    <Message Text="Copy from @(NativeRestoredAppHostNETCore) to $(AppHostTemplatePath)."
+             Importance="High" />
+
+  </Target>
+
+  <Target Name="EnsureAppHostPackageRestored">
+
+    <MSBuild
+      BuildInParallel="False"
+      Targets="Restore"
+      Properties="RuntimeIdentifiers=$(Rid);TargetFramework=$(AppTargetFramework);TemplateFillInPackageName=$(TemplateFillInPackageName);TemplateFillInPackageVersion=$(TemplateFillInPackageVersion);RestorePackagesPath=$(AppHostIntermediateDirectory)"
+      Projects="$(MSBuildThisFileDirectory)/template.csproj">
+    </MSBuild>
+  </Target>
+</Project>
