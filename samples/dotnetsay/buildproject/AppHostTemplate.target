@@ -1,12 +1,5 @@
 <Project DefaultTargets="ExtractAppHostToOutput">
 
-    <PropertyGroup>
-        <TemplateFillInPackageName>microsoft.netcore.dotnetapphost</TemplateFillInPackageName>
-        <TemplateFillInPackageVersion>2.1.0-preview3-26406-06</TemplateFillInPackageVersion>
-        <AppTargetFramework>netcoreapp2.1</AppTargetFramework>
-        <Rid>win-x64</Rid>
-    </PropertyGroup>
-
   <PropertyGroup>
     <NativeExecutableExtension Condition=" $(Rid.StartsWith('win'))">.exe</NativeExecutableExtension>
     <AppHostExecutableName>AppHost$(NativeExecutableExtension)</AppHostExecutableName>
@@ -38,7 +31,18 @@
 
   </Target>
 
-  <Target Name="EnsureAppHostPackageRestored">
+  <Target Name="SetProperties">
+    <PropertyGroup>
+      <TemplateFillInPackageName>microsoft.netcore.dotnetapphost</TemplateFillInPackageName>
+      <TemplateFillInPackageVersion>2.1.0-preview3-26406-06</TemplateFillInPackageVersion>
+      <AppTargetFramework>netcoreapp2.1</AppTargetFramework>
+      <Rid>win-x64</Rid>
+      <AppHostTemplatePath>$(OutputPath)/shims</AppHostTemplatePath>
+      <AppHostIntermediateDirectory>$(IntermediateOutputPath)</AppHostIntermediateDirectory>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="EnsureAppHostPackageRestored" DependsOnTargets="SetProperties">
 
     <MSBuild
       BuildInParallel="False"
