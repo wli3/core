@@ -13,7 +13,7 @@
              Importance="High" />
 
     <ItemGroup>
-      <AllFileOfRestoredAppHostPackage Include="$(AppHostIntermediateDirectory)\**\*.*" />
+      <AllFileOfRestoredAppHostPackage Include="$(AppHostIntermediateDirectory)/**/*.*" />
       <NativeRestoredAppHostNETCore
           Include="@(AllFileOfRestoredAppHostPackage)"
           Condition="'%(FileName)%(Extension)' == '$(AppHostExecutableName)'"/>
@@ -22,11 +22,16 @@
     <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
            Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in $(AllFileOfRestoredAppHostPackage)" />
 
-    <UsingTask TaskName="TaskName"
-                AssemblyName = "$(MSBuildThisFileDirectory)/../../" />
-    <Copy
-        SourceFiles="@(NativeRestoredAppHostNETCore)"
-        DestinationFolder="$(AppHostTemplatePath)" />
+    <UsingTask TaskName="EmbedAppNameInHost"
+                AssemblyName = "$(MSBuildThisFileDirectory)/../../buildproject/bin/$(Configuration)/$(TargetFramework)/buildproject.dll" />
+
+
+    <!--.store/t-rex/1.0.0-preview1-003/t-rex/1.0.0-preview1-003/tools/netcoreapp2.1/any-->
+
+    <EmbedAppNameInHost
+        AppHostSourceFilePath="@(NativeRestoredAppHostNETCore->Single())"
+        AppHostDestinationFilePath="$(AppHostTemplatePath)/$(TargetName)$(NativeExecutableExtension)"
+        AppBinaryFilePath=".store/$(PackageId)/$(PackageVersion)/$(PackageId)/$(PackageVersion)/tools/$(AppTargetFramework)/any/$(TargetName)$(NativeExecutableExtension)"/>
 
     <Message Text="Copy from @(NativeRestoredAppHostNETCore) to $(AppHostTemplatePath)."
              Importance="High" />
