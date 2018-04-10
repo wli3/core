@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.85" />
+    <ProjectReference Include="../buildproject/buildproject.csproj" />
   </ItemGroup>
 
   <Import Project="buildproject/AppHostTemplate.target" />

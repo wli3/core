@@ -9,7 +9,7 @@
           Condition="!Exists('$(AppHostTemplatePath)/$(AppHostExecutableName)')"
           DependsOnTargets="EnsureAppHostPackageRestored">
 
-    <Message Text="Restore $(TemplateFillInPackageName) from $(AppHostTemplatePath) to $(AppHostTemplateRestoreAdditionalParameters)."
+    <Message Text="Restore $(TemplateFillInPackageName) from $(AppHostIntermediateDirectory) to $(AppHostTemplatePath)."
              Importance="High" />
 
     <ItemGroup>
@@ -22,6 +22,8 @@
     <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
            Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in $(AllFileOfRestoredAppHostPackage)" />
 
+    <UsingTask TaskName="TaskName"
+                AssemblyName = "$(MSBuildThisFileDirectory)/../../" />
     <Copy
         SourceFiles="@(NativeRestoredAppHostNETCore)"
         DestinationFolder="$(AppHostTemplatePath)" />
@@ -39,6 +41,11 @@
       <Rid>win-x64</Rid>
       <AppHostTemplatePath>$(OutputPath)/shims</AppHostTemplatePath>
       <AppHostIntermediateDirectory>$(IntermediateOutputPath)</AppHostIntermediateDirectory>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <NativeExecutableExtension Condition=" $(Rid.StartsWith('win'))">.exe</NativeExecutableExtension>
+      <AppHostExecutableName>AppHost$(NativeExecutableExtension)</AppHostExecutableName>
     </PropertyGroup>
   </Target>
 
