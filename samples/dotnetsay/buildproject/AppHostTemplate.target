@@ -1,5 +1,9 @@
 <Project DefaultTargets="ExtractAppHostToOutput">
 
+<!--TODO hard coded task dll-->
+  <UsingTask TaskName="EmbedAppNameInHost"
+             AssemblyFile = "E:\workspace2\core\samples\buildproject\bin\Debug\netcoreapp2.1\buildproject.dll" />
+
   <PropertyGroup>
     <NativeExecutableExtension Condition=" $(Rid.StartsWith('win'))">.exe</NativeExecutableExtension>
     <AppHostExecutableName>AppHost$(NativeExecutableExtension)</AppHostExecutableName>
@@ -22,14 +26,11 @@
     <Error Condition="@(NativeRestoredAppHostNETCore->Distinct()->Count()) != 1"
            Text="Failed to determine the $(_NETCoreDotNetAppHostPackageName) executable in $(AllFileOfRestoredAppHostPackage)" />
 
-    <UsingTask TaskName="EmbedAppNameInHost"
-                AssemblyName = "$(MSBuildThisFileDirectory)/../../buildproject/bin/$(Configuration)/$(TargetFramework)/buildproject.dll" />
-
 
     <!--.store/t-rex/1.0.0-preview1-003/t-rex/1.0.0-preview1-003/tools/netcoreapp2.1/any-->
 
     <EmbedAppNameInHost
-        AppHostSourceFilePath="@(NativeRestoredAppHostNETCore->Single())"
+        AppHostSourceFilePath="@(NativeRestoredAppHostNETCore)"
         AppHostDestinationFilePath="$(AppHostTemplatePath)/$(TargetName)$(NativeExecutableExtension)"
         AppBinaryFilePath=".store/$(PackageId)/$(PackageVersion)/$(PackageId)/$(PackageVersion)/tools/$(AppTargetFramework)/any/$(TargetName)$(NativeExecutableExtension)"/>
 
