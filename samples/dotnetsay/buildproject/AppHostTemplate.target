@@ -32,7 +32,7 @@
     <EmbedAppNameInHost
         AppHostSourceFilePath="@(NativeRestoredAppHostNETCore)"
         AppHostDestinationFilePath="$(AppHostTemplatePath)/$(TargetName)$(NativeExecutableExtension)"
-        AppBinaryFilePath=".store/$(PackageId)/$(PackageVersion)/$(PackageId)/$(PackageVersion)/tools/$(AppTargetFramework)/any/$(TargetName)$(NativeExecutableExtension)"/>
+        AppBinaryFilePath=".store/$(PackageId)/$(PackageVersion)/$(PackageId)/$(PackageVersion)/tools/$(AppTargetFramework)/any/$(TargetFileName)"/>
 
     <Message Text="Copy from @(NativeRestoredAppHostNETCore) to $(AppHostTemplatePath)."
              Importance="High" />
